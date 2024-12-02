@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Cuisine search</title>
+    <style>
+    body {
+        background-color: #F2F4FF;
+        }
+    label, button {
+        color: #464E56;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 20px;
+        margin-left: 10px;
+        }
+     input {
+        color: #232F3E;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 20px;
+        margin-left: 20px;
+        }
+    </style>
+	<!-- Load d3.js -->
+	<script src="https://d3js.org/d3.v4.js"></script>
+    <script>
+		function renderGraph(dat) {
+			var searchData = JSON.parse(eval(dat)); 
+			console.log(searchData)
+
+			const table = document.getElementById('resultsTable');
+			table.innerHTML = "";
+			let row = table.insertRow();
+			row.insertCell(0)
+			row.insertCell(1).innerHTML = '<b>Restaurant</b>';
+			row.insertCell(2).innerHTML = '<b>Stars</b>';
+			row.insertCell(3).innerHTML = '<b>Relevance Score</b>';
+			let i = 1;
+			searchData.forEach ( item => {
+				let row = table.insertRow();
+				row.insertCell(0).innerHTML = i + '.';
+				i = i + 1;
+				let rest = row.insertCell(1);
+				rest.innerHTML = item.Restaurant;
+				rest.style.width="300px";
+				let stars = row.insertCell(2);
+				stars.innerHTML = ((item.Stars).toFixed(1)) + ' stars';
+				stars.style.width="200px";
+				let score = row.insertCell(3);
+				score.innerHTML = ((item.Score).toFixed(1)) + ' points';
+			});
+		
+		}
+
+		function getSelectValues(select) {
+			var result = [];
+			var options = select && select.options;
+			var opt;
+
+			for (var i=0, iLen=options.length; i<iLen; i++) {
+				opt = options[i];
+
+				if (opt.selected) {
+					result.push(opt.value || opt.text);
+				}
+			}
+			return result;
+		}
+		function populateDishes(dishes){
+			var dishList = JSON.parse(eval(dishes));
+			console.log(dishList);
+
+			var selectElement = document.getElementById('dish');
+	
+			selectElement.innerHTML = "";
+
+			dishList.map(function (d) {
+				selectElement.add(new Option(d));
+				return;
+			});
+			document.getElementById("dish_group").style.display = "block";
+
+		}
+
+        // define the callAPI function that takes a cuisine and dish name (if available) as parameters
+		function updateDishesAPI (){
+			var cuisineValue = document.getElementById('cuisine').value	;
+			console.log(cuisineValue)
+			var raw = JSON.stringify({"cuisine":cuisineValue, "dishes":""});
+			console.log("No dishes selected")
+				
+			// Get dish list and add to select
+			var myHeaders = new Headers();
+			myHeaders.append("Content-Type", "application/json");
+			var requestOptions = {
+				method: 'POST',
+				headers: myHeaders,
+				body: raw,
+				redirect: 'follow'
+			};
+			fetch("https://atxbzcgc22.execute-api.us-east-2.amazonaws.com/dev", requestOptions)
+				.then(response => response.text())
+				.then(response => JSON.parse(response).body)
+				.then(responseJson => this.populateDishes(responseJson))
+				.catch(error => console.log('error', error));
+
+		}
+		function displayGraphAPI (newCuisine) {
+			var cuisineValue = document.getElementById('cuisine').value;
+			if (newCuisine === 'True') {
+				var dishSelection = ""
+			}
+			else {
+				var dishSelection = getSelectValues(document.getElementById('dish'));
+			}
+			console.log(cuisineValue)
+			console.log(dishSelection);
+
+			if (dishSelection.length === 0) {
+				var raw = JSON.stringify({"cuisine":cuisineValue, "dishes":""});
+			} else {
+				console.log("Dishes selected:" + dishSelection.toString());
+				var raw = JSON.stringify({"cuisine":cuisineValue, "dishes":dishSelection.toString()});
+			}
+			
+			console.log(cuisineValue);
+			console.log(">>>>" + raw)
+			var myHeaders = new Headers();
+			myHeaders.append("Content-Type", "application/json");
+			var requestOptions = {
+				method: 'POST',
+				headers: myHeaders,
+				body: raw,
+				redirect: 'follow'
+			};
+			fetch("https://i5rznr5n6k.execute-api.us-east-2.amazonaws.com/Cuisine", requestOptions)
+            .then(response => response.text())
+			.then(response => JSON.parse(response).body)
+            .then(responseJson => this.renderGraph(responseJson))
+            .catch(error => console.log('error', error));
+			//renderGraph();
+			//            .then(result => alert(JSON.parse(result).body))
+
+		}
+		
+    </script>
+	<script type="text/javascript">
+		window.addEventListener("load", function () {
+			
+			updateDishesAPI(); 
+			displayGraphAPI(newCuisine = 'True');
+		}, false);
+	</script>
+</head>
+
+<body>
+<h1 style="color: #464E56; font-family: Arial, Helvetica, sans-serif; font-size: 30px; margin-left: 10px;"> Top Movies</h1>
+<h3 style="color: #002EAD; font-family: Arial, Helvetica, sans-serif; font-size: 15px; margin-left: 10px;">
+	<br>
+	CS598-PSL Project 4
+</h3>
+- Tim Crosling (tgc3@illinois.edu)<br>
+- Kin Yik Lam (kinyikl2@illinois.edu)<br>
+- Chua Swee Kwang (skchua2@illinois.edu)
+<br>
+<br>
+<h3 style="color: #002EAD; font-family: Arial, Helvetica, sans-serif; font-size: 15px; margin-left: 10px;">
+	Select which movies you prefer:
+</h3>
+<hr>
+<div id="search_container" style="display: flex">
+	<div id="cuisine_group" style="display: inline-block; width:300px; float: left; margin-right: 15px;">
+		<label for="cuisine">Choose a Cuisine:&nbsp;&nbsp</label>
+		<select name="cuisine" id="cuisine" style="width:100px;" 
+			onchange="updateDishesAPI();  displayGraphAPI(newCuisine = 'True');">
+		  <option value="Chinese" selected>Chinese</option>
+		  <option value="Italian">Italian</option>
+		  <option value="Thai">Thai</option>
+		  <option value="Mexican">Mexican</option>
+		  <option value="Korean">Korean</option>
+		</select> 
+	</div>
+	<div id="dish_group" style="width:500px; float: left; display: none;">
+		<label for="dish" style="vertical-align: top;">Choose a Dish:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp</label>
+		<select name="dish" id="dish" multiple size=5 style="width:150px;"
+			onchange="displayGraphAPI(newCuisine = 'False');">
+		</select> 
+	</div>
+</div>
+<hr>
+<br>
+<div id="my_results" style="display: none">
+	<h3 style="color: #464E56; font-family: Arial, Helvetica, sans-serif; font-size: 20px; margin-left: 10px;">
+		Results:
+	</h3>
+	<div id='my_dataviz'></div>
+</div>
+<div id='mytableResults'>
+	<table id='resultsTable' style="color: #464E56; font-family: Arial, Helvetica, sans-serif; font-size: 16px; margin-left: 10px;"></table>
+</div>
+</body>
+</html>
