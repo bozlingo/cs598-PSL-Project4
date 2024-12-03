@@ -32,77 +32,29 @@
         padding: 20px;
         text-align: center;
         background-color: #f4f4f4;
-    }		
+    }
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        text-align: center;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        user-select: none; /* Prevent text selection */
+    }
+    .button:hover {
+        background-color: #0056b3;
+    }
+    .button:active {
+        background-color: #004080;
+    }	
     </style>
 	<!-- Load d3.js -->
 	<script src="https://d3js.org/d3.v4.js"></script>
     <script>
-		function renderGraph(dat) {
-			var searchData = JSON.parse(eval(dat)); 
-			console.log(searchData)
-
-			const table = document.getElementById('resultsTable');
-			table.innerHTML = "";
-			let row = table.insertRow();
-			row.insertCell(0)
-			row.insertCell(1).innerHTML = '<b>Restaurant</b>';
-			row.insertCell(2).innerHTML = '<b>Stars</b>';
-			row.insertCell(3).innerHTML = '<b>Relevance Score</b>';
-			let i = 1;
-			searchData.forEach ( item => {
-				let row = table.insertRow();
-				row.insertCell(0).innerHTML = i + '.';
-				i = i + 1;
-				let rest = row.insertCell(1);
-				rest.innerHTML = item.Restaurant;
-				rest.style.width="300px";
-				let stars = row.insertCell(2);
-				stars.innerHTML = ((item.Stars).toFixed(1)) + ' stars';
-				stars.style.width="200px";
-				let score = row.insertCell(3);
-				score.innerHTML = ((item.Score).toFixed(1)) + ' points';
-			});
-		
-		}
-
-		function getSelectValues(select) {
-			var result = [];
-			var options = select && select.options;
-			var opt;
-
-			for (var i=0, iLen=options.length; i<iLen; i++) {
-				opt = options[i];
-
-				if (opt.selected) {
-					result.push(opt.value || opt.text);
-				}
-			}
-			return result;
-		}
-		function populateDishes(dishes){
-			var dishList = JSON.parse(eval(dishes));
-			console.log(dishList);
-
-			var selectElement = document.getElementById('dish');
-	
-			selectElement.innerHTML = "";
-
-			dishList.map(function (d) {
-				selectElement.add(new Option(d));
-				return;
-			});
-			document.getElementById("dish_group").style.display = "block";
-
-		}
-
-        // define the callAPI function that takes a cuisine and dish name (if available) as parameters
-		function updateDishesAPI (){
-			var cuisineValue = document.getElementById('cuisine').value	;
-			console.log(cuisineValue)
-			var raw = JSON.stringify({"cuisine":cuisineValue, "dishes":""});
-			console.log("No dishes selected")
-				
-			// Get dish list and add to select
+		function getMovies(queryString) {
 			var myHeaders = new Headers();
 			myHeaders.append("Content-Type", "application/json");
 			var requestOptions = {
@@ -111,14 +63,13 @@
 				body: raw,
 				redirect: 'follow'
 			};
-			fetch("https://atxbzcgc22.execute-api.us-east-2.amazonaws.com/dev", requestOptions)
-				.then(response => response.text())
-				.then(response => JSON.parse(response).body)
-				.then(responseJson => this.populateDishes(responseJson))
-				.catch(error => console.log('error', error));
-
+			fetch("https://5moqlznwth.execute-api.us-east-2.amazonaws.com/dev", requestOptions)
+            .then(response => response.text())
+            .then(result => alert(JSON.parse(result).body))
+            .catch(error => console.log('error', error));
 		}
-		function displayGraphAPI (newCuisine) {
+
+		/*function displayGraphAPI (newCuisine) {
 			var cuisineValue = document.getElementById('cuisine').value;
 			if (newCuisine === 'True') {
 				var dishSelection = ""
@@ -154,14 +105,14 @@
 			//renderGraph();
 			//            .then(result => alert(JSON.parse(result).body))
 
-		}
+		}*/
 		
     </script>
 	<script type="text/javascript">
 		window.addEventListener("load", function () {
 			
-			updateDishesAPI(); 
-			displayGraphAPI(newCuisine = 'True');
+			getMovies("");
+			
 		}, false);
 	</script>
 </head>
@@ -194,6 +145,7 @@
         <div class="cell" id="cell-5-1">Row 5, Col 1</div>
         <div class="cell" id="cell-5-2">Row 5, Col 2</div>
     </div>
+	<br>
     <div class="button" id="submitButton" onclick="handleClick()">Submit</div>
 	
 </div>
