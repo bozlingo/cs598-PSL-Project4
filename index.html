@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Cuisine search</title>
+    <title>Movie Recommendation App</title>
     <style>
     body {
         background-color: #F2F4FF;
@@ -68,44 +68,6 @@
             .then(result => alert(JSON.parse(result).body))
             .catch(error => console.log('error', error));
 		}
-
-		/*function displayGraphAPI (newCuisine) {
-			var cuisineValue = document.getElementById('cuisine').value;
-			if (newCuisine === 'True') {
-				var dishSelection = ""
-			}
-			else {
-				var dishSelection = getSelectValues(document.getElementById('dish'));
-			}
-			console.log(cuisineValue)
-			console.log(dishSelection);
-
-			if (dishSelection.length === 0) {
-				var raw = JSON.stringify({"cuisine":cuisineValue, "dishes":""});
-			} else {
-				console.log("Dishes selected:" + dishSelection.toString());
-				var raw = JSON.stringify({"cuisine":cuisineValue, "dishes":dishSelection.toString()});
-			}
-			
-			console.log(cuisineValue);
-			console.log(">>>>" + raw)
-			var myHeaders = new Headers();
-			myHeaders.append("Content-Type", "application/json");
-			var requestOptions = {
-				method: 'POST',
-				headers: myHeaders,
-				body: raw,
-				redirect: 'follow'
-			};
-			fetch("https://i5rznr5n6k.execute-api.us-east-2.amazonaws.com/Cuisine", requestOptions)
-            .then(response => response.text())
-			.then(response => JSON.parse(response).body)
-            .then(responseJson => this.renderGraph(responseJson))
-            .catch(error => console.log('error', error));
-			//renderGraph();
-			//            .then(result => alert(JSON.parse(result).body))
-
-		}*/
 		
     </script>
 	<script type="text/javascript">
@@ -136,17 +98,48 @@
     <div class="table">
         <div class="cell" id="cell-1-1">Row 1, Col 1</div>
         <div class="cell" id="cell-1-2">Row 1, Col 2</div>
+		<div class="cell" id="check1-1">
+			<input type="checkbox" class="checkbox" id="checkbox-1-1">
+		</div>
+		<div class="cell" id="check1-2">
+			<input type="checkbox" class="checkbox" id="checkbox-1-2">
+		</div>
         <div class="cell" id="cell-2-1">Row 2, Col 1</div>
         <div class="cell" id="cell-2-2">Row 2, Col 2</div>
+		<div class="cell" id="check2-1">
+			<input type="checkbox" class="checkbox" id="checkbox-2-1">
+		</div>
+		<div class="cell" id="check2-2">
+			<input type="checkbox" class="checkbox" id="checkbox-2-2">
+		</div>
         <div class="cell" id="cell-3-1">Row 3, Col 1</div>
         <div class="cell" id="cell-3-2">Row 3, Col 2</div>
+		<div class="cell" id="check3-1">
+			<input type="checkbox" class="checkbox" id="checkbox-3-1">
+		</div>
+		<div class="cell" id="check3-2">
+			<input type="checkbox" class="checkbox" id="checkbox-3-2">
+		</div>
         <div class="cell" id="cell-4-1">Row 4, Col 1</div>
         <div class="cell" id="cell-4-2">Row 4, Col 2</div>
+		<div class="cell" id="check4-1">
+			<input type="checkbox" class="checkbox" id="checkbox-4-1">
+		</div>
+		<div class="cell" id="check4-2">
+			<input type="checkbox" class="checkbox" id="checkbox-4-2">
+		</div>
         <div class="cell" id="cell-5-1">Row 5, Col 1</div>
         <div class="cell" id="cell-5-2">Row 5, Col 2</div>
+		<div class="cell" id="check5-1">
+			<input type="checkbox" class="checkbox" id="checkbox-5-1">
+		</div>
+		<div class="cell" id="check5-2">
+			<input type="checkbox" class="checkbox" id="checkbox-5-2">
+		</div>
+
     </div>
 	<br>
-    <div class="button" id="submitButton" onclick="handleClick()">Submit</div>
+    <div class="button" id="submitButton" onclick="getMovies()">Submit</div>
 	
 </div>
 </body>
