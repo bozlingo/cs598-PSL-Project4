@@ -100,15 +100,9 @@
 			}
 			//console.log("REVIEW TEXT:" + reviewText + ":");
 			
-            //var raw = JSON.stringify({reviewText});
-			//var raw = '{"reviews":' + reviewText + '}'
 			console.log("Server Query:" + raw)
 
-            //var raw = JSON.stringify({'reviews':reviewText});
-			//const cleanedRaw = raw.replace(/\\/g, "");
-			//var raw = { reviews : reviewText };
-			//console.log("RAW:" + raw)
-            //var raw = JSON.stringify({"reviews":""});
+
 			var requestOptions = {
 				method: 'POST',
 				headers: myHeaders,
@@ -119,9 +113,13 @@
             .then(response => response.text())
             .then(result => {
 				divObjects = ["cell-1-1", "cell-1-2", "cell-1-3", "cell-1-4", "cell-1-5", "cell-2-1", "cell-2-2", "cell-2-3", "cell-2-4", "cell-2-5"];
+				console.log("Received:" + JSON.parse(result).body)
 				const movies = JSON.parse(JSON.parse(result).body);
 				i = 0
 				movies.forEach (movie => {
+					if (i === 0){
+						console.log(movie);
+					}
 					const movieDiv = document.getElementById(divObjects[i]);
 					
 					movieDiv.innerHTML = "";
@@ -296,7 +294,7 @@
 
     </div>
 	<br>
-    <div class="button" id="submitButton" onclick="getMovies()">Submit</div>
+    <div class="button" id="submitButton" onclick="getMovies()">Submit <br>(wait 10 seconds)</div>
 	
 </div>
 </body>
