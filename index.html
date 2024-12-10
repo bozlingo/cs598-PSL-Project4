@@ -144,6 +144,12 @@
 					i = i + 1
 				});
 				
+				selectObjects.forEach(selectId => {
+					const dropdown = document.getElementById(selectId);
+					if (dropdown) {
+						dropdown.value = "";
+					}
+				});
 			})
             .catch(error => console.log('error', error));
 		}
